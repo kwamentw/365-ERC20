@@ -52,6 +52,7 @@ contract FourbToken {
         uint256 _amount
     ) external returns (bool) {
         require(_amount < balanceOf[msg.sender], "Insufficient balance");
+        require(_amount != 0, "You have to transfer something");
         require(receiver != address(0), "Invalid receiver");
         balanceOf[msg.sender] -= _amount;
         balanceOf[receiver] += _amount;
@@ -68,6 +69,8 @@ contract FourbToken {
         uint256 amount,
         address Spender
     ) external returns (bool) {
+        require(Spender != address(0), "Invalid address");
+        require(amount < balanceOf[msg.sender] && amount != 0);
         Allowance[msg.sender][Spender] = amount;
         emit Approve(msg.sender, Spender, amount);
         return true;
@@ -84,6 +87,8 @@ contract FourbToken {
         address to,
         uint256 amount
     ) external returns (bool) {
+        require(from != address(0) && to != address(0));
+        require(amount < balanceOf[msg.sender] && amount != 0);
         Allowance[from][msg.sender] -= amount;
         balanceOf[from] -= amount;
         balanceOf[to] += amount;
@@ -96,6 +101,8 @@ contract FourbToken {
      * @param amount amount to be minted
      */
     function mint(uint256 amount) external returns (bool) {
+        require(amount != 0, "invalid amount");
+        require(amount < totalSupply);
         balanceOf[msg.sender] += amount;
         totalSupply += amount;
         emit Transfer(address(0), msg.sender, amount);
@@ -107,6 +114,8 @@ contract FourbToken {
      * @param amount amount to be burnt from pool
      */
     function burn(uint256 amount) external returns (bool) {
+        require(amount != 0, "You have to burn something");
+        require(amount < totalSupply, "Invalid amount");
         balanceOf[msg.sender] -= amount;
         totalSupply -= amount;
         emit Transfer(msg.sender, address(0), amount);
