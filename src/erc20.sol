@@ -97,6 +97,14 @@ contract FourbToken {
     }
 
     /**
+     * Check the balance of the address provided
+     * @param owner address of owner
+     */
+    function balanceOfAddress(address owner) public view returns (uint) {
+        return balanceOf[owner];
+    }
+
+    /**
      * A function that mints tokens
      * @param amount amount to be minted
      */
