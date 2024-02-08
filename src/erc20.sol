@@ -70,7 +70,10 @@ contract FourbToken {
         address Spender
     ) external returns (bool) {
         require(Spender != address(0), "Invalid address");
-        require(amount < balanceOf[msg.sender] && amount != 0);
+        require(
+            amount < balanceOf[msg.sender] && amount != 0,
+            "we cant do this"
+        );
         Allowance[msg.sender][Spender] = amount;
         emit Approve(msg.sender, Spender, amount);
         return true;
