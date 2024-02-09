@@ -39,7 +39,7 @@ contract FourbToken {
         symbol = _symbol;
         decimals = _decimals;
         totalSupply = _initialAmount * (10 ** (decimals));
-        balanceOf[msg.sender] = totalSupply;
+        //balanceOf[msg.sender] = totalSupply;
     }
 
     /**
