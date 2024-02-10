@@ -24,7 +24,6 @@ contract TestFourbToken is Test {
     function testApprove() public {
         mytoken.mint(16000e18);
         assertTrue(mytoken.ApproveSpender(1200 ether, address(35)));
-        console2.log(mytoken.balanceOf(address(35)));
     }
 
     function testfailApprove() public {
@@ -35,10 +34,21 @@ contract TestFourbToken is Test {
 
     function testTransferFrom() public {
         mytoken.mint(16000e18);
-        assertTrue(mytoken.ApproveSpender(12000e18, address(992)));
-        console2.log(mytoken.balanceOf(address(992)));
-        assertTrue(
-            mytoken.transferfrom(address(992), address(21444), 11000e18)
-        );
+        assertTrue(mytoken.ApproveSpender(12000e18, address(this)));
+        assertTrue(mytoken.transferfrom(address(this), address(21), 12000e18));
+    }
+
+    function testBal() public {
+        mytoken.mint(16e18);
+        mytoken.balanceOf(address(this));
+    }
+
+    function testMint() public {
+        assertTrue(mytoken.mint(12e18));
+    }
+
+    function testBurn() public {
+        assertTrue(mytoken.mint(12e18));
+        assertTrue(mytoken.burn(12e18));
     }
 }
