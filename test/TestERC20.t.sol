@@ -12,6 +12,7 @@ contract TestFourbToken is Test {
         mytoken = new FourbToken("FourB", "4B", 18, 200000e18);
     }
 
+    // Testing transfer function
     function testTransferToken() public {
         mytoken.mint(16000e18);
         uint256 bal = mytoken.balanceOf(address(54));
@@ -21,32 +22,40 @@ contract TestFourbToken is Test {
         console2.log(mytoken.balanceOf(address(this)));
     }
 
+    // Testing whether approval works
     function testApprove() public {
         mytoken.mint(16000e18);
         assertTrue(mytoken.ApproveSpender(1200 ether, address(35)));
     }
 
+    // test checks when approve fails
     function testfailApprove() public {
         // The sender of the contract has to mint some tokens before he can approve someone to spend some
         vm.expectRevert(bytes("we cant do this"));
         mytoken.ApproveSpender(1234e18, address(2341));
     }
 
+    // test to check transferfrom function
     function testTransferFrom() public {
+        vm.startPrank(address(33));
         mytoken.mint(16000e18);
-        assertTrue(mytoken.ApproveSpender(12000e18, address(this)));
+        assertTrue(mytoken.ApproveSpender(12000e18, address(33)));
         assertTrue(mytoken.transferfrom(address(this), address(21), 12000e18));
+        vm.stopPrank();
     }
 
+    // Checking whether balances truly return
     function testBal() public {
         mytoken.mint(16e18);
         mytoken.balanceOf(address(this));
     }
 
+    // testing whether mint works
     function testMint() public {
         assertTrue(mytoken.mint(12e18));
     }
 
+    // testing whether you can burn tokens
     function testBurn() public {
         assertTrue(mytoken.mint(12e18));
         assertTrue(mytoken.burn(12e18));
