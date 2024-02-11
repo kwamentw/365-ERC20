@@ -65,10 +65,7 @@ contract FourbToken {
      * @param amount Amount approved to spend
      * @param Spender Address of account spending approved funds
      */
-    function ApproveSpender(
-        uint256 amount,
-        address Spender
-    ) external returns (bool) {
+    function approve(uint256 amount, address Spender) external returns (bool) {
         require(Spender != address(0), "Invalid address");
         require(
             amount < balanceOf[msg.sender] && amount != 0,
