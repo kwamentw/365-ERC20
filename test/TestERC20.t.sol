@@ -25,14 +25,14 @@ contract TestFourbToken is Test {
     // Testing whether approval works
     function testApprove() public {
         mytoken.mint(16000e18);
-        assertTrue(mytoken.ApproveSpender(1200 ether, address(35)));
+        assertTrue(mytoken.approve(1200 ether, address(35)));
     }
 
     // test checks when approve fails
     function testfailApprove() public {
         // The sender of the contract has to mint some tokens before he can approve someone to spend some
         vm.expectRevert(bytes("we cant do this"));
-        mytoken.ApproveSpender(1234e18, address(2341));
+        mytoken.approve(1234e18, address(2341));
     }
 
     // test to check transferfrom function
@@ -40,7 +40,7 @@ contract TestFourbToken is Test {
     function testTransferFrom() public {
         vm.startPrank(address(33));
         mytoken.mint(16000e18);
-        assertTrue(mytoken.ApproveSpender(12000e18, address(33)));
+        assertTrue(mytoken.approve(12000e18, address(33)));
         assertTrue(mytoken.transferfrom(address(this), address(21), 12000e18));
         vm.stopPrank();
     }
