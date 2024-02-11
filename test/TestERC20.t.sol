@@ -36,6 +36,7 @@ contract TestFourbToken is Test {
     }
 
     // test to check transferfrom function
+    // i have a problem with testing this function
     function testTransferFrom() public {
         vm.startPrank(address(33));
         mytoken.mint(16000e18);
