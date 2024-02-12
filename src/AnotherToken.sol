@@ -1,7 +1,7 @@
 //SPDX-License-Identifier:MIT
 pragma solidity 0.8.20;
 
-// importing interface
+// importing erc20 interface
 import {IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
 /**
@@ -10,9 +10,9 @@ import {IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20
  * @notice I am just trying to understand how this erc20 thing works with the interface
  */
 
-// Base contract to be implemented by other contracts so it has to abstract to save loads of gas by ethereum standards
-abstract contract AnotherToken is IERC20 {
-    ////-----------------------------------////
+// i can make it a base contract like => Base contract to be implemented by other contracts so it has to abstract to save loads of gas by ethereum standards
+contract AnotherToken is IERC20 {
+    ////-------------------------------------------------------------------------------////
     // Declaring all neccesary variables
     event Status(string);
 
@@ -28,7 +28,7 @@ abstract contract AnotherToken is IERC20 {
     uint256 private _totalSupply;
     uint8 private immutable DECIMAL = 18;
 
-    ////-----------------------------------////
+    ////------------------------------------------------------------------------------////
 
     /**
      * These are required by EIP standards
@@ -70,7 +70,7 @@ abstract contract AnotherToken is IERC20 {
 
     /**
      * Checks balance of the account provided
-     * @param _account Address account you want to check
+     * @param _account Address of account you want to check
      */
     function balanceOf(address _account) public view returns (uint256) {
         return _balances[_account];
@@ -79,7 +79,7 @@ abstract contract AnotherToken is IERC20 {
     /**
      * Checks the amount approved for spender
      * @param _account address of the owner of the account
-     * @param spender address you approved
+     * @param spender address you approved to spend
      */
     function allowance(
         address _account,
