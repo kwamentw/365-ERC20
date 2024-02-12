@@ -24,8 +24,11 @@ contract TestFourbToken is Test {
 
     // Testing whether approval works
     function testApprove() public {
+        vm.startPrank(address(234));
         mytoken.mint(16000e18);
-        assertTrue(mytoken.approve(1200 ether, address(35)));
+        assertTrue(mytoken.approve(12e18, address(35)));
+        mytoken.balAllowances(address(35));
+        vm.stopPrank();
     }
 
     // test checks when approve fails
@@ -37,12 +40,17 @@ contract TestFourbToken is Test {
 
     // test to check transferfrom function
     // i have a problem with testing this function
+    // looks like this program wont work without the interface
     function testTransferFrom() public {
-        vm.startPrank(address(33));
+        address a = address(33);
+        address b = address(12);
+        vm.startPrank(address(a));
         mytoken.mint(16000e18);
-        assertTrue(mytoken.approve(12000e18, address(33)));
-        assertTrue(mytoken.transferfrom(address(this), address(21), 12000e18));
+        assertTrue(mytoken.approve(13000e18, b));
         vm.stopPrank();
+
+        vm.prank(b);
+        assertTrue(mytoken.transferfrom(a, address(21), 12000e18));
     }
 
     // Checking whether balances truly return

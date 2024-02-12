@@ -76,6 +76,12 @@ contract FourbToken {
         return true;
     }
 
+    function balAllowances(address spender) external view returns (uint, uint) {
+        uint256 balance = Allowance[msg.sender][spender];
+        uint256 balance1 = Allowance[spender][msg.sender];
+        return (balance, balance1);
+    }
+
     /**
      * A function to transfer tokens from one address to another
      * @param from Address of sender
