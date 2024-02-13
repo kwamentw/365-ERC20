@@ -72,6 +72,10 @@ contract AnotherTokenTest is Test {
         assertGt(token.allowance(newGuy, address(12)), 1);
     }
 
+    /**
+     * test whether transferring to a specific address works
+     * this is as per ERC20 standards
+     */
     function testTransferHOT() public {
         vm.startPrank(newGuy);
         uint256 balOfReceiver = token.balanceOf(RECEIVER);
@@ -81,11 +85,17 @@ contract AnotherTokenTest is Test {
         vm.stopPrank();
     }
 
+    /**
+     * test whether the test fails when 0 is passed as amount
+     */
     function testfailTransferHOT() public {
         vm.prank(newGuy);
         token.transfer(RECEIVER, 0);
     }
 
+    /**
+     * test whether approving spenders wotk
+     */
     function testApproveHOT() public {
         vm.startPrank(newGuy);
         uint256 prevAllowance = token.allowance(newGuy, RECEIVER);
@@ -95,6 +105,9 @@ contract AnotherTokenTest is Test {
         vm.stopPrank();
     }
 
+    /**
+     * Checks whether a spender can send an allowed amount from the owner's account to specified address
+     */
     function testTransferHOTFrom() public {
         testApproveHOT();
 
@@ -112,6 +125,9 @@ contract AnotherTokenTest is Test {
         vm.stopPrank();
     }
 
+    /**
+     * test whether you can mint a certain amount to an address
+     */
     function testMintHOT() public {
         uint256 totalsupplyHOT = token.totalSupply();
         token.mint(address(6031957), 12333);
@@ -120,6 +136,9 @@ contract AnotherTokenTest is Test {
         assertEq(bal, 12333);
     }
 
+    /**
+     * Checks whether the owner can burn some tokens
+     */
     function testBurnHOT() public {
         uint256 totalsupplyHOT = token.totalSupply();
         token.burn(newGuy, 1234);
