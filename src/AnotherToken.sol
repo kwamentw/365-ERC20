@@ -167,7 +167,7 @@ contract AnotherToken is IERC20 {
      * @param account account tokens are minted to
      * @param amount amount of tokens minted
      */
-    function mint(address account, uint256 amount) internal {
+    function mint(address account, uint256 amount) external {
         if (account == address(0) && amount < 1) {
             revert Invalid_Inputs(account);
         }
@@ -181,7 +181,7 @@ contract AnotherToken is IERC20 {
      * @param account account to burn tokens from
      * @param amount amount of tokens to be burnt
      */
-    function burn(address account, uint256 amount) internal {
+    function burn(address account, uint256 amount) external {
         if (account == address(0) && amount < 1) {
             revert Invalid_Inputs(account);
         }
