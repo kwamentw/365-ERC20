@@ -121,7 +121,7 @@ contract AnotherToken is IERC20 {
         if (spender == address(0)) {
             revert Invalid_Inputs(spender);
         }
-        if (owner == address(0)) {
+        if (owner == address(0) && owner != msg.sender) {
             revert Invalid_Inputs(owner);
         }
         if (value < 1e18) {
@@ -155,6 +155,7 @@ contract AnotherToken is IERC20 {
             }
         }
         approve(spender, spenderAllowance - value);
+        _allowances[from][spender] = spenderAllowance - value;
         _balances[from] = FromBal - value;
         _balances[to] += value;
         emit Transfer(from, to, value);

@@ -3,6 +3,7 @@ pragma solidity 0.8.20;
 
 import {Test} from "forge-std/Test.sol";
 import {AnotherToken} from "../src/AnotherToken.sol";
+import {console2} from "forge-std/console2.sol";
 
 /**
  * @title A test script for the erc20 base contract
@@ -15,6 +16,8 @@ contract AnotherTokenTest is Test {
     AnotherToken token;
     //address of the owner
     address newGuy = makeAddr("newGuy");
+    address RECEIVER = makeAddr("receiver");
+    address weirdo = makeAddr("weirdo");
 
     //setting up contract for test
     function setUp() public {
@@ -67,5 +70,59 @@ contract AnotherTokenTest is Test {
         vm.prank(newGuy);
         token.approve(address(12), 120e18);
         assertGt(token.allowance(newGuy, address(12)), 1);
+    }
+
+    function testTransferHOT() public {
+        vm.startPrank(newGuy);
+        uint256 balOfReceiver = token.balanceOf(RECEIVER);
+        assertTrue(token.transfer(RECEIVER, 120e18));
+        uint256 UpdatedbalOfReceiver = token.balanceOf(RECEIVER);
+        assertEq(balOfReceiver + 120e18, UpdatedbalOfReceiver);
+        vm.stopPrank();
+    }
+
+    function testfailTransferHOT() public {
+        vm.prank(newGuy);
+        token.transfer(RECEIVER, 0);
+    }
+
+    function testApproveHOT() public {
+        vm.startPrank(newGuy);
+        uint256 prevAllowance = token.allowance(newGuy, RECEIVER);
+        assertTrue(token.approve(RECEIVER, 120e18));
+        uint256 afterAllowance = token.allowance(newGuy, RECEIVER);
+        assertEq((prevAllowance + 120e18), afterAllowance);
+        vm.stopPrank();
+    }
+
+    function testTransferHOTFrom() public {
+        testApproveHOT();
+
+        vm.startPrank(RECEIVER);
+        uint256 oldFromBal = token.balanceOf(newGuy);
+
+        assertTrue(token.transferFrom(newGuy, weirdo, 110e18));
+
+        uint256 newAllowance = token.allowance(newGuy, RECEIVER);
+        uint256 newFromBal = token.balanceOf(newGuy);
+
+        assertEq(newFromBal, oldFromBal - 110e18);
+        assertEq(newAllowance, 120e18 - 110e18);
+        assertEq(token.balanceOf(weirdo), 110e18);
+        vm.stopPrank();
+    }
+
+    function testMintHOT() public {
+        uint256 totalsupplyHOT = token.totalSupply();
+        token.mint(address(6031957), 12333);
+        uint256 bal = token.balanceOf(address(6031957));
+        assertEq(totalsupplyHOT + 12333, token.totalSupply());
+        assertEq(bal, 12333);
+    }
+
+    function testBurnHOT() public {
+        uint256 totalsupplyHOT = token.totalSupply();
+        token.burn(newGuy, 1234);
+        assertEq(totalsupplyHOT - 1234, token.totalSupply());
     }
 }
