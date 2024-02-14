@@ -133,6 +133,45 @@ contract AnotherToken is IERC20 {
     }
 
     /**
+     *A func to help you increase the allowance you set for your spender
+     * @param owner owner account address
+     * @param spender spender's address
+     * @param value amount you want to increase by
+     */
+    function IncreaseAllowance(
+        address owner,
+        address spender,
+        uint256 value
+    ) public returns (bool) {
+        require(value > 0, "Invalid value cannot Increase allowance");
+        require(owner != address(0) && spender != address(0), "Invalid inputs");
+        require(
+            _allowances[owner][spender] > 0,
+            "You have to approve your spender"
+        );
+        _allowances[owner][spender] += value;
+        return true;
+    }
+
+    /**
+     * This function decreases the allowance of spenders
+     * @param owner address of owner account
+     * @param spender address of spender account
+     * @param value Amount of allowance to be decreased
+     */
+    function DecreaseAllowance(
+        address owner,
+        address spender,
+        uint256 value
+    ) public returns (bool) {
+        require(value > 0, "Invalid value cannot decrease allowance");
+        require(owner != address(0) && spender != address(0), "Invalid inputs");
+        require(_allowances[owner][spender] > value);
+        _allowances[owner][spender] -= value;
+        return true;
+    }
+
+    /**
      * Transfers tokens from one address to another
      * @param from sender of tokens
      * @param to receiver of tokens
