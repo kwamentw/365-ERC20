@@ -143,6 +143,7 @@ contract AnotherToken is IERC20 {
         address spender,
         uint256 value
     ) public returns (bool) {
+        require(owner == msg.sender, "MF you aren't authorised");
         require(value > 0, "Invalid value cannot Increase allowance");
         require(owner != address(0) && spender != address(0), "Invalid inputs");
         require(
@@ -164,6 +165,7 @@ contract AnotherToken is IERC20 {
         address spender,
         uint256 value
     ) public returns (bool) {
+        require(owner == msg.sender, "MF you aren't authorised");
         require(value > 0, "Invalid value cannot decrease allowance");
         require(owner != address(0) && spender != address(0), "Invalid inputs");
         require(_allowances[owner][spender] > value);
