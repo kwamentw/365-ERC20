@@ -144,4 +144,22 @@ contract AnotherTokenTest is Test {
         token.burn(newGuy, 1234);
         assertEq(totalsupplyHOT - 1234, token.totalSupply());
     }
+
+    function testIncreaseAllowance() public {
+        testApproveHOT();
+        uint256 oldallowance = token.allowance(newGuy, RECEIVER);
+        vm.prank(newGuy);
+        assertTrue(token.IncreaseAllowance(newGuy, RECEIVER, 12e18));
+        uint256 newallowance = token.allowance(newGuy, RECEIVER);
+        assertEq(oldallowance + 12e18, newallowance);
+    }
+
+    function testDecreaseAllowance() public {
+        testApproveHOT();
+        uint256 OldAllowance = token.allowance(newGuy, RECEIVER);
+        vm.prank(newGuy);
+        assertTrue(token.DecreaseAllowance(newGuy, RECEIVER, 13e18));
+        uint256 NewAllowance = token.allowance(newGuy, RECEIVER);
+        assertEq(OldAllowance - 13e18, NewAllowance);
+    }
 }

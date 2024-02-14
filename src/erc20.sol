@@ -95,7 +95,7 @@ contract FourbToken {
     ) external returns (bool) {
         require(from != address(0) && to != address(0));
         require(amount < balanceOf[msg.sender] && amount != 0);
-        Allowance[from][msg.sender] -= amount;
+        Allowance[msg.sender][from] -= amount;
         balanceOf[from] -= amount;
         balanceOf[to] += amount;
         emit Transfer(from, to, amount);

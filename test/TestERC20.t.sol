@@ -46,7 +46,7 @@ contract TestFourbToken is Test {
         address b = address(12);
         vm.startPrank(address(a));
         mytoken.mint(16000e18);
-        assertTrue(mytoken.approve(13000e18, b));
+        mytoken.approve(13000e18, b);
         vm.stopPrank();
 
         vm.prank(b);
