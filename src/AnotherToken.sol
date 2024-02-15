@@ -95,8 +95,11 @@ contract AnotherToken is IERC20 {
      */
     function transfer(address to, uint256 value) public returns (bool) {
         address owner = msg.sender;
-        if (owner == address(0) && to == address(0) && value >= 1e18) {
+        if (owner == address(0) && to == address(0)) {
             revert Invalid_Inputs(address(0));
+        }
+        if (value <= 1e18) {
+            revert Insufficient_Funds(value);
         }
         uint256 OwnerBalance = _balances[owner];
         if (OwnerBalance < value) {
@@ -121,7 +124,7 @@ contract AnotherToken is IERC20 {
         if (spender == address(0)) {
             revert Invalid_Inputs(spender);
         }
-        if (owner == address(0) && owner != msg.sender) {
+        if (owner == address(0)) {
             revert Invalid_Inputs(owner);
         }
         if (value < 1e18) {

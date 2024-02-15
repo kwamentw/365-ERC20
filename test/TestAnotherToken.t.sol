@@ -88,13 +88,59 @@ contract AnotherTokenTest is Test {
     /**
      * test whether the test fails when 0 is passed as amount
      */
-    function testfailTransferHOT() public {
+    function testRevertsifAmountZero() public {
+        vm.expectRevert();
         vm.prank(newGuy);
         token.transfer(RECEIVER, 0);
     }
 
     /**
-     * test whether approving spenders wotk
+     * Testing if a zero address can transfer
+     */
+    function testRevertZeroSender() public {
+        vm.expectRevert();
+        vm.prank(address(0));
+        token.transfer(RECEIVER, 12);
+    }
+
+    /**
+     * Testing if a zero address can recive funds
+     */
+    function testRevertZeroReceiver() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.transfer(address(0), 234);
+    }
+
+    /**
+     * Testing if transfer will be possible if value>owner balance
+     */
+    function testRevertOwnerFunds() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.transfer(RECEIVER, 1236578e18);
+    }
+
+    function testRevertApproverAddress() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.approve(address(0), 23);
+    }
+
+    function testRevertApproveOwnerAddress() public {
+        vm.expectRevert();
+        vm.prank(address(0));
+        token.approve(RECEIVER, 23);
+    }
+
+    function testRevertValueApprove() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.approve(RECEIVER, 2);
+    }
+
+    /**
+     * test whether approving spenders work
      */
     function testApproveHOT() public {
         vm.startPrank(newGuy);
