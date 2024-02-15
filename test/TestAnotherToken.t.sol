@@ -174,6 +174,34 @@ contract AnotherTokenTest is Test {
     }
 
     /**
+     * This function tests whether the owner is the msg.sender
+     */
+    function testIncAllowanceOwner() public {
+        vm.expectRevert();
+        vm.prank(weirdo);
+        token.IncreaseAllowance(newGuy, RECEIVER, 2333);
+    }
+
+    /**
+     * Tests whether the increments value is not zero
+     */
+    function testRevertIfValueIszero() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.IncreaseAllowance(newGuy, RECEIVER, 0);
+    }
+
+    /**
+     * Tests whether spender is approved or not
+     */
+    function testRevertsSpenderNotApproved() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.IncreaseAllowance(newGuy, weirdo, 2333);
+    }
+
+    /**
      * Test whether owner can decrease the amount approved for spender
      */
     function testDecreaseAllowance() public {
@@ -183,6 +211,35 @@ contract AnotherTokenTest is Test {
         assertTrue(token.DecreaseAllowance(newGuy, RECEIVER, 13e18));
         uint256 NewAllowance = token.allowance(newGuy, RECEIVER);
         assertEq(OldAllowance - 13e18, NewAllowance);
+    }
+
+    /**
+     * Tests whether decrease owner is msg.sender
+     */
+    function testDecreaseOwner() public {
+        vm.expectRevert();
+        vm.prank(weirdo);
+        token.DecreaseAllowance(newGuy, RECEIVER, 234323432);
+    }
+
+    /**
+     * Tests whether owner has has approved spender
+     * in decreaseAllowance
+     */
+    function testRevertOwnerNotApproved() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.DecreaseAllowance(newGuy, weirdo, 343234323432);
+    }
+
+    /**
+     * Tests whether value to be incremented is greater than zero
+     */
+    function testincrementVal() public {
+        vm.expectRevert();
+        vm.prank(newGuy);
+        token.DecreaseAllowance(newGuy, RECEIVER, 0);
     }
 
     /**

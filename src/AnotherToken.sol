@@ -140,6 +140,8 @@ contract AnotherToken is IERC20 {
      * @param owner owner account address
      * @param spender spender's address
      * @param value amount you want to increase by
+     * I am aware require statements consume loads of gas as compared to custom errors
+     * But i miss them that's why i am usin them
      */
     function IncreaseAllowance(
         address owner,
@@ -148,7 +150,6 @@ contract AnotherToken is IERC20 {
     ) public returns (bool) {
         require(owner == msg.sender, "MF you aren't authorised");
         require(value > 0, "Invalid value cannot Increase allowance");
-        require(owner != address(0) && spender != address(0), "Invalid inputs");
         require(
             _allowances[owner][spender] > 0,
             "You have to approve your spender"
@@ -162,6 +163,9 @@ contract AnotherToken is IERC20 {
      * @param owner address of owner account
      * @param spender address of spender account
      * @param value Amount of allowance to be decreased
+     * i miss require statements that why i am using them
+     * i am aware it cost alot of gas
+     * but this is only for practice purposes
      */
     function DecreaseAllowance(
         address owner,
@@ -170,8 +174,10 @@ contract AnotherToken is IERC20 {
     ) public returns (bool) {
         require(owner == msg.sender, "MF you aren't authorised");
         require(value > 0, "Invalid value cannot decrease allowance");
-        require(owner != address(0) && spender != address(0), "Invalid inputs");
-        require(_allowances[owner][spender] > value);
+        require(
+            _allowances[owner][spender] > value,
+            "You have to approve your spender"
+        );
         _allowances[owner][spender] -= value;
         return true;
     }
