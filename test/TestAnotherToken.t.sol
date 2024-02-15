@@ -121,18 +121,27 @@ contract AnotherTokenTest is Test {
         token.transfer(RECEIVER, 1236578e18);
     }
 
+    /**
+     * Testing approvers address
+     */
     function testRevertApproverAddress() public {
         vm.expectRevert();
         vm.prank(newGuy);
         token.approve(address(0), 23);
     }
 
+    /**
+     * Testing owners address
+     */
     function testRevertApproveOwnerAddress() public {
         vm.expectRevert();
         vm.prank(address(0));
         token.approve(RECEIVER, 23);
     }
 
+    /**
+     * testing value to be approved
+     */
     function testRevertValueApprove() public {
         vm.expectRevert();
         vm.prank(newGuy);
