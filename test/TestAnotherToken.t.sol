@@ -262,6 +262,9 @@ contract AnotherTokenTest is Test {
         vm.stopPrank();
     }
 
+    /**
+     * Testing whether protocol reverts when sender is a zero address
+     */
     function testTransferFromHOTZeroSender() public {
         testApproveHOT();
         vm.expectRevert();
@@ -269,6 +272,9 @@ contract AnotherTokenTest is Test {
         token.transferFrom(address(0), weirdo, 23444444);
     }
 
+    /**
+     * Testing whether protocol will reverts when receiver is equal to a zero address
+     */
     function testZeroReceiverTransFrmHOT() public {
         testApproveHOT();
         vm.expectRevert();
@@ -276,6 +282,9 @@ contract AnotherTokenTest is Test {
         token.transferFrom(newGuy, address(0), 34234323434324);
     }
 
+    /**
+     * Testing whether protocol can transfer 0 value
+     */
     function testTransFrmHOTValue() public {
         testApproveHOT();
         vm.expectRevert();
@@ -283,6 +292,9 @@ contract AnotherTokenTest is Test {
         token.transferFrom(newGuy, weirdo, 0);
     }
 
+    /**
+     * Tests whether protocol will revert when value>from account's balance
+     */
     function testFromBalance() public {
         testApproveHOT();
         vm.expectRevert();
@@ -290,12 +302,18 @@ contract AnotherTokenTest is Test {
         token.transferFrom(newGuy, weirdo, 1234567876543456e18);
     }
 
+    /**
+     * Test whether spender can spend more than allowance
+     */
     function testSpenderAllowanceTrFrmHOT() public {
         testApproveHOT();
         vm.expectRevert();
         token.transferFrom(newGuy, weirdo, 135e18);
     }
 
+    /**
+     * Checks whether spender can spend uint max
+     */
     function testSpenderMaxedOut() public {
         testApproveHOT();
         vm.expectRevert();
@@ -313,11 +331,17 @@ contract AnotherTokenTest is Test {
         assertEq(bal, 12333);
     }
 
+    /**
+     * Test whether protocol can mint to a zero address
+     */
     function testMintAddress() public {
         vm.expectRevert();
         token.mint(address(0), 23e18);
     }
 
+    /**
+     * Test whether protocol can mint zero value
+     */
     function testMintVal() public {
         vm.expectRevert();
         token.mint(weirdo, 0);
@@ -332,11 +356,17 @@ contract AnotherTokenTest is Test {
         assertEq(totalsupplyHOT - 1234, token.totalSupply());
     }
 
+    /**
+     * Checks whether burn address will revert when set to something else
+     */
     function testBurnAddress() public {
         vm.expectRevert();
         token.burn(weirdo, 23333);
     }
 
+    /**
+     * Checks whether user can burn 0 amount
+     */
     function testBurnVal() public {
         vm.expectRevert();
         token.burn(address(0), 0);
