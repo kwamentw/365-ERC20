@@ -328,17 +328,17 @@ contract AnotherTokenTest is Test {
      */
     function testBurnHOT() public {
         uint256 totalsupplyHOT = token.totalSupply();
-        token.burn(newGuy, 1234);
+        token.burn(address(0), 1234);
         assertEq(totalsupplyHOT - 1234, token.totalSupply());
     }
 
     function testBurnAddress() public {
         vm.expectRevert();
-        token.burn(address(0), 23333);
+        token.burn(weirdo, 23333);
     }
 
     function testBurnVal() public {
         vm.expectRevert();
-        token.burn(newGuy, 0);
+        token.burn(address(0), 0);
     }
 }

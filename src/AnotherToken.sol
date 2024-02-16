@@ -247,14 +247,13 @@ contract AnotherToken is IERC20 {
      * @param amount amount of tokens to be burnt
      */
     function burn(address account, uint256 amount) external {
-        if (account == address(0)) {
+        if (account != address(0)) {
             revert Invalid_Inputs(account);
         }
         if (amount < 1) {
             revert Insufficient_Funds(amount);
         }
         _totalSupply -= amount;
-        _balances[account] -= amount;
         emit Status("You have burned some tokens");
     }
 }
