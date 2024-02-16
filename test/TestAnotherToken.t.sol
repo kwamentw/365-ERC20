@@ -262,6 +262,46 @@ contract AnotherTokenTest is Test {
         vm.stopPrank();
     }
 
+    function testTransferFromHOTZeroSender() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(RECEIVER);
+        token.transferFrom(address(0), weirdo, 23444444);
+    }
+
+    function testZeroReceiverTransFrmHOT() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(RECEIVER);
+        token.transferFrom(newGuy, address(0), 34234323434324);
+    }
+
+    function testTransFrmHOTValue() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(RECEIVER);
+        token.transferFrom(newGuy, weirdo, 0);
+    }
+
+    function testFromBalance() public {
+        testApproveHOT();
+        vm.expectRevert();
+        vm.prank(RECEIVER);
+        token.transferFrom(newGuy, weirdo, 1234567876543456e18);
+    }
+
+    function testSpenderAllowanceTrFrmHOT() public {
+        testApproveHOT();
+        vm.expectRevert();
+        token.transferFrom(newGuy, weirdo, 135e18);
+    }
+
+    function testSpenderMaxedOut() public {
+        testApproveHOT();
+        vm.expectRevert();
+        token.transferFrom(newGuy, weirdo, type(uint256).max);
+    }
+
     /**
      * test whether you can mint a certain amount to an address
      */
@@ -273,6 +313,16 @@ contract AnotherTokenTest is Test {
         assertEq(bal, 12333);
     }
 
+    function testMintAddress() public {
+        vm.expectRevert();
+        token.mint(address(0), 23e18);
+    }
+
+    function testMintVal() public {
+        vm.expectRevert();
+        token.mint(weirdo, 0);
+    }
+
     /**
      * Checks whether the owner can burn some tokens
      */
@@ -280,5 +330,15 @@ contract AnotherTokenTest is Test {
         uint256 totalsupplyHOT = token.totalSupply();
         token.burn(newGuy, 1234);
         assertEq(totalsupplyHOT - 1234, token.totalSupply());
+    }
+
+    function testBurnAddress() public {
+        vm.expectRevert();
+        token.burn(address(0), 23333);
+    }
+
+    function testBurnVal() public {
+        vm.expectRevert();
+        token.burn(newGuy, 0);
     }
 }

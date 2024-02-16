@@ -196,14 +196,25 @@ contract AnotherToken is IERC20 {
         address spender = msg.sender;
         uint256 FromBal = _balances[from];
         uint256 spenderAllowance = allowance(from, spender);
-        if (spender == address(0) && from == address(0) && to == address(0)) {
-            revert Invalid_Inputs(address(0));
+        if (from == address(0)) {
+            revert Invalid_Inputs(from);
         }
-        if (value < 1e18 && FromBal < value && spenderAllowance < value) {
-            if (spenderAllowance != type(uint256).max) {
-                revert Insufficient_Funds(value);
-            }
+        if (to == address(0)) {
+            revert Invalid_Inputs(to);
         }
+        if (value < 1e18) {
+            revert Insufficient_Funds(value);
+        }
+        if (FromBal < value) {
+            revert Insufficient_Funds(FromBal);
+        }
+        if (spenderAllowance != type(uint256).max) {
+            revert Insufficient_Funds(value);
+        }
+        if (spenderAllowance < value) {
+            revert Insufficient_Funds(spenderAllowance);
+        }
+
         approve(spender, spenderAllowance - value);
         _allowances[from][spender] = spenderAllowance - value;
         _balances[from] = FromBal - value;
@@ -219,8 +230,11 @@ contract AnotherToken is IERC20 {
      * @param amount amount of tokens minted
      */
     function mint(address account, uint256 amount) external {
-        if (account == address(0) && amount < 1) {
+        if (account == address(0)) {
             revert Invalid_Inputs(account);
+        }
+        if (amount < 1) {
+            revert Insufficient_Funds(amount);
         }
         _totalSupply += amount;
         _balances[account] += amount;
@@ -233,8 +247,11 @@ contract AnotherToken is IERC20 {
      * @param amount amount of tokens to be burnt
      */
     function burn(address account, uint256 amount) external {
-        if (account == address(0) && amount < 1) {
+        if (account == address(0)) {
             revert Invalid_Inputs(account);
+        }
+        if (amount < 1) {
+            revert Insufficient_Funds(amount);
         }
         _totalSupply -= amount;
         _balances[account] -= amount;
