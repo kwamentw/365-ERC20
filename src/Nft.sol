@@ -64,4 +64,33 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
                 ? string.concat(baseURI, tokenId.toString())
                 : "";
     }
+
+    function setApproveForAll(address operator, bool approved) public {
+        _operatorApprovals[msg.sender][operator] = approved;
+    }
+
+    function approve(uint256 tokenId, address spender) public {
+        address owner = owners[tokenId];
+        require(owner == msg.sender, "You cant approve");
+        require(spender != address(0), "Invalid address");
+        setApproveForAll(spender, true);
+        _tokenApprovals[tokenId] = spender;
+    }
+
+    function getApproved(uint256 tokenId) public view returns (address) {
+        require(OwnerOf(tokenId) != address(0), "Invalid address");
+        return _tokenApprovals[tokenId];
+    }
+
+    /**
+     * To check whether spender is approved
+     * @param owner owner address
+     * @param spender spender address
+     */
+    function isApprovedForAll(
+        address owner,
+        address spender
+    ) public view returns (bool) {
+        return _operatorApprovals[owner][spender];
+    }
 }
