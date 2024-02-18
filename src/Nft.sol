@@ -39,6 +39,17 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         return _symbol;
     }
 
+    function balanceOf(address owner) public view returns (uint256) {
+        require(owner != address(0), "Invalid address");
+        return _balances[owner];
+    }
+
+    function OwnerOf(uint256 _tokenId) public view returns (address) {
+        address owner = owners[_tokenId];
+        require(owner != address(0), "Inavlid address");
+        return owner;
+    }
+
     function _baseURI() public pure returns (string memory) {
         return "";
     }
