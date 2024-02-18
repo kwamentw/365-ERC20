@@ -39,21 +39,38 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         return _symbol;
     }
 
+    /**
+     * Returns balance of owner
+     * @param owner address of owner
+     */
     function balanceOf(address owner) public view returns (uint256) {
         require(owner != address(0), "Invalid address");
         return _balances[owner];
     }
 
+    /**
+     * To return owner of the specified token
+     * @param _tokenId id of token
+     */
     function OwnerOf(uint256 _tokenId) public view returns (address) {
         address owner = owners[_tokenId];
         require(owner != address(0), "Inavlid address");
         return owner;
     }
 
+    /**
+     * Base URI for computing {tokenURI}. If set, the resulting URI for each
+     * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
+     * by default, can be overridden in child contracts.
+     */
     function _baseURI() public pure returns (string memory) {
         return "";
     }
 
+    /**
+     * returns the uniform resource identifier of the token
+     * @param tokenId id of token
+     */
     function tokenURI(
         uint256 tokenId /**view */
     ) public pure returns (string memory) {
@@ -65,10 +82,20 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
                 : "";
     }
 
+    /**
+     * to add and remove spenders
+     * @param operator address of spender
+     * @param approved state of approval
+     */
     function setApproveForAll(address operator, bool approved) public {
         _operatorApprovals[msg.sender][operator] = approved;
     }
 
+    /**
+     * gives permission to spender to transfer token to another account
+     * @param tokenId id of the nft
+     * @param spender address of spender
+     */
     function approve(uint256 tokenId, address spender) public {
         address owner = owners[tokenId];
         require(owner == msg.sender, "You cant approve");
@@ -77,6 +104,10 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         _tokenApprovals[tokenId] = spender;
     }
 
+    /**
+     * Get address of the approved spender
+     * @param tokenId id of the token
+     */
     function getApproved(uint256 tokenId) public view returns (address) {
         require(OwnerOf(tokenId) != address(0), "Invalid address");
         return _tokenApprovals[tokenId];
