@@ -211,6 +211,11 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         }
     }
 
+    /**
+     * To mint tokens to an address
+     * @param to address to mint tokens to
+     * @param tokenId id of the token
+     */
     function _mint(address to, uint256 tokenId) internal {
         require(to != address(0), "Invalid address");
         require(owners[tokenId] == address(0), "already minted");
@@ -218,6 +223,10 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         owners[tokenId] = to;
     }
 
+    /**
+     * Burns token of the owner
+     * @param tokenId id of token to burn
+     */
     function burn(uint256 tokenId) internal {
         address owner = owners[tokenId];
         require(owners[tokenId] != address(0), "Invalid address");
