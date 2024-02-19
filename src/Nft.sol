@@ -129,6 +129,12 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         return _operatorApprovals[owner][spender];
     }
 
+    /**
+     * To transfer token from `from` to `to`
+     * @param from address of token holder(from)
+     * @param to address of token receiver(to)
+     * @param tokenId id of the token
+     */
     function transferFrom(address from, address to, uint256 tokenId) public {
         require(from == owners[tokenId], "not owner of token");
         require(to != address(0), "Invalid address");
@@ -138,6 +144,13 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         owners[tokenId] = to;
     }
 
+    /**
+     * Safely transfers token to token receiver from token holder
+     * @param from address of token holder
+     * @param to address of token receiver
+     * @param tokenId id of token
+     * @param data data to be called with transfer
+     */
     function safeTransferFrom(
         address from,
         address to,
@@ -165,6 +178,13 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         }
     }
 
+    /**
+     * Safely transfer token from token holder to token receiver
+     * this function looks the same as the previous one but it doesn't have the data param
+     * @param from address of token holder
+     * @param to address of token receiver
+     * @param tokenId id of token
+     */
     function safeTransferFrom(
         address from,
         address to,
