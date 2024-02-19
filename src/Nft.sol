@@ -8,6 +8,8 @@ import {Strings} from "../lib/openzeppelin-contracts/contracts/utils//Strings.so
 import {IERC721Metadata} from "../lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
 abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
+    error Invalid_Receiver(address);
+
     using Strings for uint256;
     string _name;
     string _symbol;
@@ -120,8 +122,87 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
      */
     function isApprovedForAll(
         address owner,
-        address spender
+        address spender,
+        uint256 tokenId
     ) public view returns (bool) {
+        require(spender == _tokenApprovals[tokenId], "You are not approved");
         return _operatorApprovals[owner][spender];
+    }
+
+    function transferFrom(address from, address to, uint256 tokenId) public {
+        require(from == owners[tokenId], "not owner of token");
+        require(to != address(0), "Invalid address");
+        require(isApprovedForAll(from, msg.sender, tokenId));
+        _balances[from]--;
+        _balances[to]++;
+        owners[tokenId] = to;
+    }
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory data
+    ) public {
+        transferFrom(from, to, tokenId);
+        if (to.code.length > 0) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    msg.sender,
+                    from,
+                    tokenId,
+                    data
+                )
+            returns (bytes4 returnvalue) {
+                if (returnvalue != IERC721Receiver.onERC721Received.selector) {
+                    revert Invalid_Receiver(to);
+                }
+            } catch (bytes memory reason) {
+                if (reason.length == 0) {
+                    revert Invalid_Receiver(to);
+                }
+            }
+        }
+    }
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public {
+        transferFrom(from, to, tokenId);
+        if (to.code.length > 0) {
+            try
+                IERC721Receiver(to).onERC721Received(
+                    msg.sender,
+                    from,
+                    tokenId,
+                    ""
+                )
+            returns (bytes4 returnvalue) {
+                if (returnvalue != IERC721Receiver.onERC721Received.selector) {
+                    revert Invalid_Receiver(to);
+                }
+            } catch (bytes memory reason) {
+                if (reason.length == 0) {
+                    revert Invalid_Receiver(to);
+                }
+            }
+        }
+    }
+
+    function _mint(address to, uint256 tokenId) internal {
+        require(to != address(0), "Invalid address");
+        require(owners[tokenId] == address(0), "already minted");
+        _balances[to]++;
+        owners[tokenId] = to;
+    }
+
+    function burn(uint256 tokenId) internal {
+        address owner = owners[tokenId];
+        require(owners[tokenId] != address(0), "Invalid address");
+        _balances[owner]--;
+        delete owners[tokenId];
+        delete _tokenApprovals[tokenId];
     }
 }
