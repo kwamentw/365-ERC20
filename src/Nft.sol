@@ -1,4 +1,4 @@
-//SPDX-License-identifier: MIT
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
 import {IERC721} from "../lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol";
@@ -17,7 +17,7 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
     mapping(uint256 tokenId => address) owners;
     mapping(address owner => uint256) _balances;
     mapping(uint256 tokenId => address) _tokenApprovals;
-    mapping(address owner => mapping(address operator => bool)) _operatorApprovals;
+    mapping(address owner => mapping(address operator => bool)) _spenderApprovals;
 
     /**
      * Initializing contract by setting name and symbol
@@ -54,7 +54,7 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
      * To return owner of the specified token
      * @param _tokenId id of token
      */
-    function OwnerOf(uint256 _tokenId) public view returns (address) {
+    function ownerOf(uint256 _tokenId) public view returns (address) {
         address owner = owners[_tokenId];
         require(owner != address(0), "Inavlid address");
         return owner;
@@ -85,12 +85,14 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
     }
 
     /**
-     * to add and remove spenders
-     * @param operator address of spender
+     * to add and remove spenders for all assets of owner
+     * @param spender address of spender
      * @param approved state of approval
      */
-    function setApproveForAll(address operator, bool approved) public {
-        _operatorApprovals[msg.sender][operator] = approved;
+    function setApprovalForAll(address spender, bool approved) public {
+        require(spender != address(0), "Invalid address");
+        _spenderApprovals[msg.sender][spender] = approved;
+        emit ApprovalForAll(msg.sender, spender, approved);
     }
 
     /**
@@ -98,12 +100,13 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
      * @param tokenId id of the nft
      * @param spender address of spender
      */
-    function approve(uint256 tokenId, address spender) public {
+    function approve(address spender, uint256 tokenId) public {
         address owner = owners[tokenId];
         require(owner == msg.sender, "You cant approve");
         require(spender != address(0), "Invalid address");
-        setApproveForAll(spender, true);
+        setApprovalForAll(spender, true);
         _tokenApprovals[tokenId] = spender;
+        emit Approval(owner, spender, tokenId);
     }
 
     /**
@@ -111,7 +114,7 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
      * @param tokenId id of the token
      */
     function getApproved(uint256 tokenId) public view returns (address) {
-        require(OwnerOf(tokenId) != address(0), "Invalid address");
+        require(ownerOf(tokenId) != address(0), "Invalid address");
         return _tokenApprovals[tokenId];
     }
 
@@ -122,11 +125,9 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
      */
     function isApprovedForAll(
         address owner,
-        address spender,
-        uint256 tokenId
+        address spender
     ) public view returns (bool) {
-        require(spender == _tokenApprovals[tokenId], "You are not approved");
-        return _operatorApprovals[owner][spender];
+        return _spenderApprovals[owner][spender];
     }
 
     /**
@@ -138,10 +139,11 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
     function transferFrom(address from, address to, uint256 tokenId) public {
         require(from == owners[tokenId], "not owner of token");
         require(to != address(0), "Invalid address");
-        require(isApprovedForAll(from, msg.sender, tokenId));
+        require(isApprovedForAll(from, msg.sender));
         _balances[from]--;
         _balances[to]++;
         owners[tokenId] = to;
+        emit Transfer(from, to, tokenId);
     }
 
     /**
@@ -221,6 +223,7 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         require(owners[tokenId] == address(0), "already minted");
         _balances[to]++;
         owners[tokenId] = to;
+        emit Transfer(address(0), to, tokenId);
     }
 
     /**
@@ -233,5 +236,13 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         _balances[owner]--;
         delete owners[tokenId];
         delete _tokenApprovals[tokenId];
+        emit Transfer(owner, address(0), tokenId);
     }
+
+    function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external override returns (bytes4) {}
 }
