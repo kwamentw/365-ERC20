@@ -7,7 +7,7 @@ import {IERC165, ERC165} from "../lib/openzeppelin-contracts/contracts/utils/int
 import {Strings} from "../lib/openzeppelin-contracts/contracts/utils//Strings.sol";
 import {IERC721Metadata} from "../lib/openzeppelin-contracts/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
-abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
+contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
     error Invalid_Receiver(address);
 
     using Strings for uint256;
@@ -58,6 +58,18 @@ abstract contract NFT is IERC165, IERC721, IERC721Metadata, IERC721Receiver {
         address owner = owners[_tokenId];
         require(owner != address(0), "Inavlid address");
         return owner;
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC165, IERC165) returns (bool) {
+        return
+            interfaceId == type(IERC721).interfaceId ||
+            interfaceId == type(IERC721Metadata).interfaceId ||
+            super.supportsInterface(interfaceId);
     }
 
     /**

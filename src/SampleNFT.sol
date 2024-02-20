@@ -3,7 +3,7 @@ pragma solidity 0.8.20;
 
 import {NFT} from "./Nft.sol";
 
-abstract contract CustomToken is NFT {
+contract CustomToken is NFT {
     constructor() NFT("FASTCARTOKEN", "FSCRTKN") {}
 
     function mint(address to, uint256 tokenId) external {
