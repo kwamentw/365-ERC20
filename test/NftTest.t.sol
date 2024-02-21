@@ -10,4 +10,25 @@ contract TestNft is Test {
     function setUp() public {
         newtoken = new CustomToken();
     }
+
+    function testSupportInetrface() public view {
+        newtoken.supportsInterface(0x01ffc9a7);
+    }
+
+    function testReturnName() public view {
+        newtoken.name();
+    }
+
+    function testReturnSymbol() public view {
+        newtoken.symbol();
+    }
+
+    function testReturnBalance() public view {
+        newtoken.balanceOf(address(this));
+    }
+
+    function testfailOwneroftoken() public {
+        vm.expectRevert();
+        newtoken.ownerOf(12434998);
+    }
 }
