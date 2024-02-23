@@ -116,7 +116,6 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
         address owner = owners[tokenId];
         require(owner == msg.sender, "You cant approve");
         require(spender != address(0), "Invalid address");
-        setApprovalForAll(spender, true);
         _tokenApprovals[tokenId] = spender;
         emit Approval(owner, spender, tokenId);
     }
