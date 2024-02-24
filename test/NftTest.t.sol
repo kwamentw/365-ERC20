@@ -50,36 +50,57 @@ contract TestNft is Test {
         newtoken.ownerOf(12434998);
     }
 
+    /**
+     * Test whether this func can get owner of the token
+     */
     function testOwnerOfFSCRTKN() public {
         testMintFSCR();
         newtoken.ownerOf(5524512);
     }
 
+    /**
+     * testing to see whether return uri works
+     */
     function testUri() public view {
         newtoken._baseURI();
     }
 
+    /**
+     * Testing the set approve for all
+     */
     function testSetApproveAll() public {
         newtoken.setApprovalForAll(address(34443), true);
     }
 
+    /**
+     * testing to see if a user can can approve spenders
+     */
     function testApproveFSCRTKN() public {
         testMintFSCR();
         newtoken.approve(address(998), 5524512);
         assertEq(newtoken.getApproved(5524512), address(998));
     }
 
+    /**
+     * test to check mint function
+     */
     function testMintFSCR() public {
         newtoken.mint(address(this), 5524512);
         assertEq(newtoken.ownerOf(5524512), address(this));
     }
 
+    /**
+     * Test to check whether this func can get approved spender
+     */
     function testGetApproved() public {
         testMintFSCR();
         newtoken.approve(address(392), 5524512);
         newtoken.getApproved(5524512);
     }
 
+    /**
+     * Test to check approve for all function
+     */
     function testisApprovedForAll() public {
         testSetApproveAll();
         newtoken.isApprovedForAll(address(this), address(34443));
