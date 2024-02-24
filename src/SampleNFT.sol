@@ -11,6 +11,7 @@ contract CustomToken is NFT {
     }
 
     function _burn(uint256 tokenId) external {
+        require(msg.sender == ownerOf(tokenId));
         burn(tokenId);
     }
 }

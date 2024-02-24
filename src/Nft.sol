@@ -56,7 +56,7 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
      */
     function ownerOf(uint256 _tokenId) public view returns (address) {
         address owner = owners[_tokenId];
-        require(owner != address(0), "Inavlid address");
+        // require(owner != address(0), "Inavlid address");
         return owner;
     }
 
@@ -125,7 +125,7 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
      * @param tokenId id of the token
      */
     function getApproved(uint256 tokenId) public view returns (address) {
-        require(ownerOf(tokenId) != address(0), "Invalid address");
+        // require(ownerOf(tokenId) != address(0), "Invalid address");
         return _tokenApprovals[tokenId];
     }
 

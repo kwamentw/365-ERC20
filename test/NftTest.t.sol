@@ -107,4 +107,42 @@ contract TestNft is Test {
         // console2.log(address(this));
         // console2.log(msg.sender);
     }
+
+    /**
+     * Testing thoroughly the transferFrom function
+     */
+    function testTransFromFSCRTKN() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        newtoken.transferFrom(address(this), address(34534), 5524512);
+        assertEq(newtoken.balanceOf(address(34534)), 1);
+        assertEq(newtoken.ownerOf(5524512), address(34534));
+        assertEq(newtoken.balanceOf(address(this)), 0);
+    }
+
+    /**
+     * Same as previous function but No Data param
+     */
+    function testSafeTransFrom() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        newtoken.safeTransferFrom(address(this), address(99878), 5524512, "");
+    }
+
+    function testSafeTransfromNoData() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        newtoken.safeTransferFrom(address(this), address(4453423), 5524512);
+    }
+
+    function testBurnFSCRTKN() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        console2.log(newtoken.ownerOf(5524512));
+        console2.log(newtoken.getApproved(5524512));
+        vm.prank(address(this));
+        newtoken._burn(5524512);
+        console2.log(newtoken.ownerOf(5524512));
+        console2.log(newtoken.getApproved(5524512));
+    }
 }
