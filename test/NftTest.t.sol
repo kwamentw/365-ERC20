@@ -121,7 +121,7 @@ contract TestNft is Test {
     }
 
     /**
-     * Same as previous function but No Data param
+     * Same as previous function but more safety checks have been adopted
      */
     function testSafeTransFrom() public {
         testMintFSCR();
@@ -129,12 +129,19 @@ contract TestNft is Test {
         newtoken.safeTransferFrom(address(this), address(99878), 5524512, "");
     }
 
+    /**
+     * Same as previous function but no data param should be added
+     */
     function testSafeTransfromNoData() public {
         testMintFSCR();
         newtoken.approve(msg.sender, 5524512);
         newtoken.safeTransferFrom(address(this), address(4453423), 5524512);
     }
 
+    /**
+     * Function to test the burning of tokens
+     * the approvals all should be sero values after burn
+     */
     function testBurnFSCRTKN() public {
         testMintFSCR();
         newtoken.approve(msg.sender, 5524512);
