@@ -9,6 +9,7 @@ import {IERC721Metadata} from "../lib/openzeppelin-contracts/contracts/token/ERC
 
 contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
     error Invalid_Receiver(address);
+    error Not_Approved(address);
 
     using Strings for uint256;
     string _name;
@@ -149,10 +150,12 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
      */
     function transferFrom(address from, address to, uint256 tokenId) public {
         if (msg.sender != from) {
-            require(
-                getApproved(tokenId) == msg.sender,
-                "You are not authorised"
-            );
+            if (
+                (getApproved(tokenId) != msg.sender) ||
+                !isApprovedForAll(from, msg.sender)
+            ) {
+                revert Not_Approved(msg.sender);
+            }
         }
         require(from == owners[tokenId], "not owner of token");
         require(to != address(0), "Invalid address");

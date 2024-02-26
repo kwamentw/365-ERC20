@@ -151,10 +151,10 @@ contract TestNft is Test {
      * Testing invalid msg.sender
      */
     function testInvalidMsgSender() public {
-        vm.expectRevert();
         testMintFSCR();
-        newtoken.transferFrom(address(3433), address(3324), 5524512);
-        vm.stopPrank();
+        vm.prank(address(66787));
+        vm.expectRevert();
+        newtoken.transferFrom(address(this), address(3324), 5524512);
     }
 
     /**
