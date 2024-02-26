@@ -116,6 +116,17 @@ contract TestNft is Test {
         assertEq(newtoken.ownerOf(5524512), address(this));
     }
 
+    function testInvalidMinter() public {
+        vm.expectRevert();
+        newtoken.mint(address(0), 5524512);
+    }
+
+    function testAlreadyMinted() public {
+        testMintFSCR();
+        vm.expectRevert();
+        newtoken.mint(address(43), 5524512);
+    }
+
     /**
      * Test to check whether this func can get approved spender
      */
@@ -157,6 +168,20 @@ contract TestNft is Test {
         newtoken.transferFrom(address(this), address(3324), 5524512);
     }
 
+    function testInvalidReceiverTransFrom() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        vm.expectRevert();
+        newtoken.transferFrom(address(this), address(0), 5524512);
+    }
+
+    function testNotOwnerTransferFrom() public {
+        testMintFSCR();
+        newtoken.approve(msg.sender, 5524512);
+        vm.expectRevert();
+        newtoken.transferFrom(address(2343), address(45322), 5524512);
+    }
+
     /**
      * Same as previous function but more safety checks have been adopted
      */
@@ -188,5 +213,10 @@ contract TestNft is Test {
         newtoken._burn(5524512);
         console2.log(newtoken.ownerOf(5524512));
         console2.log(newtoken.getApproved(5524512));
+    }
+
+    function testBurnNonExistentToken() public {
+        vm.expectRevert();
+        newtoken._burn(223442342);
     }
 }

@@ -250,8 +250,8 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
      * @param tokenId id of token to burn
      */
     function burn(uint256 tokenId) internal {
+        require(owners[tokenId] != address(0), "non-existent token");
         address owner = owners[tokenId];
-        require(owners[tokenId] != address(0), "Invalid address");
         _balances[owner]--;
         delete owners[tokenId];
         delete _tokenApprovals[tokenId];
