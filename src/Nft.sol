@@ -150,8 +150,7 @@ contract NFT is IERC165, ERC165, IERC721, IERC721Metadata, IERC721Receiver {
     function transferFrom(address from, address to, uint256 tokenId) public {
         if (msg.sender != from) {
             require(
-                isApprovedForAll(from, msg.sender) ||
-                    getApproved(tokenId) == msg.sender,
+                getApproved(tokenId) == msg.sender,
                 "You are not authorised"
             );
         }

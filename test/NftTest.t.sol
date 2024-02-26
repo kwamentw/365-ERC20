@@ -73,12 +73,39 @@ contract TestNft is Test {
     }
 
     /**
+     * Tests whether user can pass in zero addresses
+     */
+    function testRevertSetApprovalAll() public {
+        vm.expectRevert();
+        newtoken.setApprovalForAll(address(0), true);
+    }
+
+    /**
      * testing to see if a user can can approve spenders
      */
     function testApproveFSCRTKN() public {
         testMintFSCR();
         newtoken.approve(address(998), 5524512);
         assertEq(newtoken.getApproved(5524512), address(998));
+    }
+
+    /**
+     * Testing whether a non owner can approve
+     */
+    function testNotOwnerApprove() public {
+        testMintFSCR();
+        vm.expectRevert();
+        vm.prank(address(44));
+        newtoken.approve(address(998), 5524512);
+    }
+
+    /**
+     * Testing whether a zero address can be approved
+     */
+    function testInvalidSpenderApprove() public {
+        testMintFSCR();
+        vm.expectRevert();
+        newtoken.approve(address(0), 5524512);
     }
 
     /**
@@ -118,6 +145,16 @@ contract TestNft is Test {
         assertEq(newtoken.balanceOf(address(34534)), 1);
         assertEq(newtoken.ownerOf(5524512), address(34534));
         assertEq(newtoken.balanceOf(address(this)), 0);
+    }
+
+    /**
+     * Testing invalid msg.sender
+     */
+    function testInvalidMsgSender() public {
+        vm.expectRevert();
+        testMintFSCR();
+        newtoken.transferFrom(address(3433), address(3324), 5524512);
+        vm.stopPrank();
     }
 
     /**
