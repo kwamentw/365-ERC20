@@ -140,8 +140,8 @@ contract AnotherToken is IERC20 {
      * @param owner owner account address
      * @param spender spender's address
      * @param value amount you want to increase by
-     * I am aware require statements consume loads of gas as compared to custom errors
-     * But i miss them that's why i am usin them
+     * I am aware require statements consume lots of gas as compared to custom errors
+     * But i miss them that's why i am using them
      */
     function IncreaseAllowance(
         address owner,
