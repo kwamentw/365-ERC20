@@ -59,6 +59,7 @@ contract MultiSigWallet {
 /**
  * SOLUTION
  * Sign messages with nonce and address of the contract.
+ * Tools used in the solution REMIX
  * link to write-up;
  * https://solidity-by-example.org/hacks/signature-replay/
  */
