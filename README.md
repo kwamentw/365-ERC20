@@ -1,3 +1,6 @@
+# Solidity Practice contracts
+### This repo is meant to showcase most things i am learning and practising in solidity
+
 ## Foundry
 
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
